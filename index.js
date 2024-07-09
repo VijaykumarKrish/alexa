@@ -1,88 +1,92 @@
 const Alexa = require('ask-sdk-core');
+const express = require('express');
+const { ExpressAdapter } = require('ask-sdk-express-adapter');
 
-// const LaunchRequestHandler = {
-//     canHandle(handlerInput) {
-//       return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
-//     },
-//     handle(handlerInput) {
-//       const speechText = 'Welcome to your SDK weather skill. Ask me the weather!';
-  
-//       return handlerInput.responseBuilder
-//         .speak(speechText)
-//         .reprompt(speechText)
-//         .withSimpleCard('Welcome to your SDK weather skill. Ask me the weather!', speechText)
-//         .getResponse();
-//     }
-//   };
+const app = express();
 
-//   const AskWeatherIntentHandler = {
-//     canHandle(handlerInput) {
-//       return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-//         && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AskWeatherIntent';
-//     },
-//     handle(handlerInput) {
-//       const speechText = 'The weather today is sunny.';
+const LaunchRequestHandler = {
+    canHandle(handlerInput) {
+      return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
+    },
+    handle(handlerInput) {
+      const speechText = 'Welcome to your SDK weather skill. Ask me the weather!';
   
-//       return handlerInput.responseBuilder
-//         .speak(speechText)
-//         .withSimpleCard('The weather today is sunny.', speechText)
-//         .getResponse();
-//     }
-//   };
-//   const HelpIntentHandler = {
-//     canHandle(handlerInput) {
-//       return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-//         && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
-//     },
-//     handle(handlerInput) {
-//       const speechText = 'You can ask me the weather!';
-  
-//       return handlerInput.responseBuilder
-//         .speak(speechText)
-//         .reprompt(speechText)
-//         .withSimpleCard('You can ask me the weather!', speechText)
-//         .getResponse();
-//     }
-//   };
-//   const CancelAndStopIntentHandler = {
-//     canHandle(handlerInput) {
-//       return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-//         && (Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.CancelIntent'
-//           || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
-//     },
-//     handle(handlerInput) {
-//       const speechText = 'Goodbye!';
-  
-//       return handlerInput.responseBuilder
-//         .speak(speechText)
-//         .withSimpleCard('Goodbye!', speechText)
-//         .withShouldEndSession(true)
-//         .getResponse();
-//     }
-//   };
-//   const SessionEndedRequestHandler = {
-//     canHandle(handlerInput) {
-//       return Alexa.getRequestType(handlerInput.requestEnvelope) === 'SessionEndedRequest';
-//     },
-//     handle(handlerInput) {
-//       // Any clean-up logic goes here.
-//       return handlerInput.responseBuilder.getResponse();
-//     }
-//   };
+      return handlerInput.responseBuilder
+        .speak(speechText)
+        .reprompt(speechText)
+        .withSimpleCard('Welcome to your SDK weather skill. Ask me the weather!', speechText)
+        .getResponse();
+    }
+  };
 
-//   const ErrorHandler = {
-//     canHandle() {
-//       return true;
-//     },
-//     handle(handlerInput, error) {
-//       console.log(`Error handled: ${error.message}`);
+  const AskWeatherIntentHandler = {
+    canHandle(handlerInput) {
+      return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+        && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AskWeatherIntent';
+    },
+    handle(handlerInput) {
+      const speechText = 'The weather today is sunny.';
   
-//       return handlerInput.responseBuilder
-//         .speak('Sorry, I don\'t understand your command. Please say it again.')
-//         .reprompt('Sorry, I don\'t understand your command. Please say it again.')
-//         .getResponse();
-//     }
-//   };
+      return handlerInput.responseBuilder
+        .speak(speechText)
+        .withSimpleCard('The weather today is sunny.', speechText)
+        .getResponse();
+    }
+  };
+  const HelpIntentHandler = {
+    canHandle(handlerInput) {
+      return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+        && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
+    },
+    handle(handlerInput) {
+      const speechText = 'You can ask me the weather!';
+  
+      return handlerInput.responseBuilder
+        .speak(speechText)
+        .reprompt(speechText)
+        .withSimpleCard('You can ask me the weather!', speechText)
+        .getResponse();
+    }
+  };
+  const CancelAndStopIntentHandler = {
+    canHandle(handlerInput) {
+      return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+        && (Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.CancelIntent'
+          || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
+    },
+    handle(handlerInput) {
+      const speechText = 'Goodbye!';
+  
+      return handlerInput.responseBuilder
+        .speak(speechText)
+        .withSimpleCard('Goodbye!', speechText)
+        .withShouldEndSession(true)
+        .getResponse();
+    }
+  };
+  const SessionEndedRequestHandler = {
+    canHandle(handlerInput) {
+      return Alexa.getRequestType(handlerInput.requestEnvelope) === 'SessionEndedRequest';
+    },
+    handle(handlerInput) {
+      // Any clean-up logic goes here.
+      return handlerInput.responseBuilder.getResponse();
+    }
+  };
+
+  const ErrorHandler = {
+    canHandle() {
+      return true;
+    },
+    handle(handlerInput, error) {
+      console.log(`Error handled: ${error.message}`);
+  
+      return handlerInput.responseBuilder
+        .speak('Sorry, I don\'t understand your command. Please say it again.')
+        .reprompt('Sorry, I don\'t understand your command. Please say it again.')
+        .getResponse();
+    }
+  };
 
 //   let skill;
 
@@ -107,37 +111,34 @@ const Alexa = require('ask-sdk-core');
 //   return response;
 // };
 
-// // exports.handler = Alexa.SkillBuilders.custom()
-// //   .addRequestHandlers(
-// //     LaunchRequestHandler,
-// //     AskWeatherIntentHandler,
-// //     HelpIntentHandler,
-// //     CancelAndStopIntentHandler,
-// //     SessionEndedRequestHandler)
-// //   .addErrorHandlers(ErrorHandler)
-// //   .lambda();
-const express = require('express');
-const { ExpressAdapter } = require('ask-sdk-express-adapter');
-
-const app = express();
-
-const skillBuilder = Alexa.SkillBuilders.custom()
+skill = Alexa.SkillBuilders.custom()
   .addRequestHandlers(
-    {
-      canHandle(handlerInput) {
-        return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
-      },
-      handle(handlerInput) {
-        const speechText = 'Welcome to your Alexa skill!';
-        return handlerInput.responseBuilder
-          .speak(speechText)
-          .getResponse();
-      },
-    }
-    // Add more handlers here
-  );
+    LaunchRequestHandler,
+    AskWeatherIntentHandler,
+    HelpIntentHandler,
+    CancelAndStopIntentHandler,
+    SessionEndedRequestHandler)
+  .addErrorHandlers(ErrorHandler)
+  .create();
 
-const skill = skillBuilder.create();
+
+// const skillBuilder = Alexa.SkillBuilders.custom()
+//   .addRequestHandlers(
+//     {
+//       canHandle(handlerInput) {
+//         return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
+//       },
+//       handle(handlerInput) {
+//         const speechText = 'Welcome to your Alexa skill!';
+//         return handlerInput.responseBuilder
+//           .speak(speechText)
+//           .getResponse();
+//       },
+//     }
+//     // Add more handlers here
+//   );
+
+// const skill = skillBuilder.create();
 const adapter = new ExpressAdapter(skill, true, true);
 
 app.get('/get', (req,res) => {

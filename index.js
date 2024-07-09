@@ -142,7 +142,7 @@ skill = Alexa.SkillBuilders.custom()
 const adapter = new ExpressAdapter(skill, true, true);
 
 app.get('/get', (req,res) => {
-    res.send("getting working")
+    res.send("getting working!!!")
 })
 
 app.post('/', adapter.getRequestHandlers());

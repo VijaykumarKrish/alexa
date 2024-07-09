@@ -1,151 +1,213 @@
-const Alexa = require('ask-sdk-core');
+//const Alexa = require('ask-sdk-core');
+const Alexa = require('ask-sdk');
 const express = require('express');
+const bodyParser = require('body-parser');
 const { ExpressAdapter } = require('ask-sdk-express-adapter');
 
 const app = express();
+app.use(bodyParser.json());
+
+
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
-      return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
+        return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
     },
     handle(handlerInput) {
-      const speechText = 'Welcome to your SDK weather skill. Ask me the weather!';
-  
-      return handlerInput.responseBuilder
-        .speak(speechText)
-        .reprompt(speechText)
-        .withSimpleCard('Welcome to your SDK weather skill. Ask me the weather!', speechText)
-        .getResponse();
-    }
-  };
+        const speechText = 'Welcome to your Alexa skill!';
 
-  const AskWeatherIntentHandler = {
-    canHandle(handlerInput) {
-      return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-        && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AskWeatherIntent';
+        return handlerInput.responseBuilder
+            .speak(speechText)
+            .reprompt(speechText)
+            .getResponse();
     },
-    handle(handlerInput) {
-      const speechText = 'The weather today is sunny.';
+};
+
+const skillBuilder = Alexa.SkillBuilders.custom()
+    .addRequestHandlers(
+        LaunchRequestHandler
+        // Add other request handlers here
+    )
+    .create();
+
+
+    app.get('/', async (req, res) => {
+        res.json("response");
+    });
+
+app.post('/alexa', async (req, res) => {
+    const response = await skillBuilder.invoke(req.body);
+    res.json(response);
+});
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const LaunchRequestHandler = {
+//     canHandle(handlerInput) {
+//       return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
+//     },
+//     handle(handlerInput) {
+//       const speechText = 'Welcome to your SDK weather skill. Ask me the weather!';
   
-      return handlerInput.responseBuilder
-        .speak(speechText)
-        .withSimpleCard('The weather today is sunny.', speechText)
-        .getResponse();
-    }
-  };
-  const HelpIntentHandler = {
-    canHandle(handlerInput) {
-      return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-        && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
-    },
-    handle(handlerInput) {
-      const speechText = 'You can ask me the weather!';
-  
-      return handlerInput.responseBuilder
-        .speak(speechText)
-        .reprompt(speechText)
-        .withSimpleCard('You can ask me the weather!', speechText)
-        .getResponse();
-    }
-  };
-  const CancelAndStopIntentHandler = {
-    canHandle(handlerInput) {
-      return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-        && (Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.CancelIntent'
-          || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
-    },
-    handle(handlerInput) {
-      const speechText = 'Goodbye!';
-  
-      return handlerInput.responseBuilder
-        .speak(speechText)
-        .withSimpleCard('Goodbye!', speechText)
-        .withShouldEndSession(true)
-        .getResponse();
-    }
-  };
-  const SessionEndedRequestHandler = {
-    canHandle(handlerInput) {
-      return Alexa.getRequestType(handlerInput.requestEnvelope) === 'SessionEndedRequest';
-    },
-    handle(handlerInput) {
-      // Any clean-up logic goes here.
-      return handlerInput.responseBuilder.getResponse();
-    }
-  };
-
-  const ErrorHandler = {
-    canHandle() {
-      return true;
-    },
-    handle(handlerInput, error) {
-      console.log(`Error handled: ${error.message}`);
-  
-      return handlerInput.responseBuilder
-        .speak('Sorry, I don\'t understand your command. Please say it again.')
-        .reprompt('Sorry, I don\'t understand your command. Please say it again.')
-        .getResponse();
-    }
-  };
-
-//   let skill;
-
-// exports.handler = async function (event, context) {
-//   console.log(`REQUEST++++${JSON.stringify(event)}`);
-//   if (!skill) {
-//     skill = Alexa.SkillBuilders.custom()
-//       .addRequestHandlers(
-//         LaunchRequestHandler,
-//         AskWeatherIntentHandler,
-//         HelpIntentHandler,
-//         CancelAndStopIntentHandler,
-//         SessionEndedRequestHandler,
-//       )
-//       .addErrorHandlers(ErrorHandler)
-//       .create();
-//   }
-
-//   const response = await skill.invoke(event, context);
-//   console.log(`RESPONSE++++${JSON.stringify(response)}`);
-
-//   return response;
-// };
-
-skill = Alexa.SkillBuilders.custom()
-  .addRequestHandlers(
-    LaunchRequestHandler,
-    AskWeatherIntentHandler,
-    HelpIntentHandler,
-    CancelAndStopIntentHandler,
-    SessionEndedRequestHandler)
-  .addErrorHandlers(ErrorHandler)
-  .create();
-
-
-// const skillBuilder = Alexa.SkillBuilders.custom()
-//   .addRequestHandlers(
-//     {
-//       canHandle(handlerInput) {
-//         return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
-//       },
-//       handle(handlerInput) {
-//         const speechText = 'Welcome to your Alexa skill!';
-//         return handlerInput.responseBuilder
-//           .speak(speechText)
-//           .getResponse();
-//       },
+//       return handlerInput.responseBuilder
+//         .speak(speechText)
+//         .reprompt(speechText)
+//         .withSimpleCard('Welcome to your SDK weather skill. Ask me the weather!', speechText)
+//         .getResponse();
 //     }
-//     // Add more handlers here
-//   );
+//   };
 
-// const skill = skillBuilder.create();
-const adapter = new ExpressAdapter(skill, true, true);
+//   const AskWeatherIntentHandler = {
+//     canHandle(handlerInput) {
+//       return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+//         && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AskWeatherIntent';
+//     },
+//     handle(handlerInput) {
+//       const speechText = 'The weather today is sunny.';
+  
+//       return handlerInput.responseBuilder
+//         .speak(speechText)
+//         .withSimpleCard('The weather today is sunny.', speechText)
+//         .getResponse();
+//     }
+//   };
+//   const HelpIntentHandler = {
+//     canHandle(handlerInput) {
+//       return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+//         && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
+//     },
+//     handle(handlerInput) {
+//       const speechText = 'You can ask me the weather!';
+  
+//       return handlerInput.responseBuilder
+//         .speak(speechText)
+//         .reprompt(speechText)
+//         .withSimpleCard('You can ask me the weather!', speechText)
+//         .getResponse();
+//     }
+//   };
+//   const CancelAndStopIntentHandler = {
+//     canHandle(handlerInput) {
+//       return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+//         && (Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.CancelIntent'
+//           || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
+//     },
+//     handle(handlerInput) {
+//       const speechText = 'Goodbye!';
+  
+//       return handlerInput.responseBuilder
+//         .speak(speechText)
+//         .withSimpleCard('Goodbye!', speechText)
+//         .withShouldEndSession(true)
+//         .getResponse();
+//     }
+//   };
+//   const SessionEndedRequestHandler = {
+//     canHandle(handlerInput) {
+//       return Alexa.getRequestType(handlerInput.requestEnvelope) === 'SessionEndedRequest';
+//     },
+//     handle(handlerInput) {
+//       // Any clean-up logic goes here.
+//       return handlerInput.responseBuilder.getResponse();
+//     }
+//   };
 
-app.get('/get', (req,res) => {
-    res.send("getting working!!!")
-})
+//   const ErrorHandler = {
+//     canHandle() {
+//       return true;
+//     },
+//     handle(handlerInput, error) {
+//       console.log(`Error handled: ${error.message}`);
+  
+//       return handlerInput.responseBuilder
+//         .speak('Sorry, I don\'t understand your command. Please say it again.')
+//         .reprompt('Sorry, I don\'t understand your command. Please say it again.')
+//         .getResponse();
+//     }
+//   };
 
-app.post('/', adapter.getRequestHandlers());
+// //   let skill;
 
-const port = process.env.PORT || 3001;
-app.listen(port, () => console.log(`Server running on port ${port}`));
+// // exports.handler = async function (event, context) {
+// //   console.log(`REQUEST++++${JSON.stringify(event)}`);
+// //   if (!skill) {
+// //     skill = Alexa.SkillBuilders.custom()
+// //       .addRequestHandlers(
+// //         LaunchRequestHandler,
+// //         AskWeatherIntentHandler,
+// //         HelpIntentHandler,
+// //         CancelAndStopIntentHandler,
+// //         SessionEndedRequestHandler,
+// //       )
+// //       .addErrorHandlers(ErrorHandler)
+// //       .create();
+// //   }
+
+// //   const response = await skill.invoke(event, context);
+// //   console.log(`RESPONSE++++${JSON.stringify(response)}`);
+
+// //   return response;
+// // };
+
+// skill = Alexa.SkillBuilders.custom()
+//   .addRequestHandlers(
+//     LaunchRequestHandler,
+//     AskWeatherIntentHandler,
+//     HelpIntentHandler,
+//     CancelAndStopIntentHandler,
+//     SessionEndedRequestHandler)
+//   .addErrorHandlers(ErrorHandler)
+//   .create();
+
+
+// // const skillBuilder = Alexa.SkillBuilders.custom()
+// //   .addRequestHandlers(
+// //     {
+// //       canHandle(handlerInput) {
+// //         return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
+// //       },
+// //       handle(handlerInput) {
+// //         const speechText = 'Welcome to your Alexa skill!';
+// //         return handlerInput.responseBuilder
+// //           .speak(speechText)
+// //           .getResponse();
+// //       },
+// //     }
+// //     // Add more handlers here
+// //   );
+
+// // const skill = skillBuilder.create();
+// const adapter = new ExpressAdapter(skill, true, true);
+
+// app.get('/get', (req,res) => {
+//     res.send("getting working!!!")
+// })
+
+// app.post('/', adapter.getRequestHandlers());
+
+// const port = process.env.PORT || 3001;
+// app.listen(port, () => console.log(`Server running on port ${port}`));

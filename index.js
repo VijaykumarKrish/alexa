@@ -1,5 +1,5 @@
-//const Alexa = require('ask-sdk-core');
-const Alexa = require('ask-sdk');
+const Alexa = require('ask-sdk-core');
+// const Alexa = require('ask-sdk');
 const express = require('express');
 const bodyParser = require('body-parser');
 const { ExpressAdapter } = require('ask-sdk-express-adapter');
@@ -36,8 +36,14 @@ const skillBuilder = Alexa.SkillBuilders.custom()
     });
 
 app.post('/alexa', async (req, res) => {
-    const response = await skillBuilder.invoke(req.body);
-    res.json(response);
+    console.log('Received request:', JSON.stringify(req.body, null, 2));
+    try {
+        const response = await skillBuilder.invoke(req.body);
+        res.json(response);
+    } catch (error) {
+        console.error('Error handling the request:', error);
+        res.status(500).send('Error handling the request');
+    }
 });
 
 const PORT = process.env.PORT || 3001;

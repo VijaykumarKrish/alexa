@@ -216,7 +216,7 @@ app.get('/get', (req,res) => {
 app.post('/alexa', async (req, res) => {
         console.log('Received request:', JSON.stringify(req.body, null, 2));
         try {
-            const response = await skillBuilder.invoke(req.body);
+            const response = await skill.invoke(req.body);
             res.json(response);
         } catch (error) {
             console.error('Error handling the request:', error);

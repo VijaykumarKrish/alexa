@@ -185,7 +185,8 @@ skill = Alexa.SkillBuilders.custom()
     AskWeatherIntentHandler,
     HelpIntentHandler,
     CancelAndStopIntentHandler,
-    SessionEndedRequestHandler)
+    //SessionEndedRequestHandler
+    )
   .addErrorHandlers(ErrorHandler)
   .create();
 

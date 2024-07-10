@@ -97,6 +97,7 @@ const LaunchRequestHandler = {
   
       return handlerInput.responseBuilder
         .speak(speechText)
+        .withShouldEndSession(false)
         .withSimpleCard('The weather today is sunny.', speechText)
         .getResponse();
     }
@@ -185,7 +186,7 @@ skill = Alexa.SkillBuilders.custom()
     AskWeatherIntentHandler,
     HelpIntentHandler,
     CancelAndStopIntentHandler,
-    //SessionEndedRequestHandler
+    SessionEndedRequestHandler
     )
   .addErrorHandlers(ErrorHandler)
   .create();

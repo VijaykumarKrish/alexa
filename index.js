@@ -6,6 +6,7 @@ const { ExpressAdapter } = require('ask-sdk-express-adapter');
 
 const app = express();
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 
 
@@ -212,6 +213,18 @@ const adapter = new ExpressAdapter(skill, true, true);
 app.get('/get', (req,res) => {
     res.send("getting working!!!")
 })
+
+
+app.post('/alexa', async (req, res) => {
+        // console.log('Received request:', JSON.stringify(req.body, null, 2));
+        try {
+            const response = await skill.invoke(req.body);
+            res.json(response);
+        } catch (error) {
+            console.error('Error handling the request:', error);
+            res.status(500).send('Error handling the request');
+        }
+    });
 
 app.post('/', adapter.getRequestHandlers());
 

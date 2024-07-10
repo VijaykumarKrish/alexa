@@ -93,7 +93,17 @@ const LaunchRequestHandler = {
         && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AskWeatherIntents';
     },
     handle(handlerInput) {
+
       const speechText = 'The weather today is sunny.';
+
+      const intentName = Alexa.getIntentName(handlerInput.requestEnvelope);
+      const slots = handlerInput.requestEnvelope.request.intent.slots;
+      const userQuery = handlerInput.requestEnvelope.request.intent.slots.InfoType.value;
+     
+  
+      console.log(`Intent received: ${intentName}`);
+      console.log(`User query: ${userQuery}`);
+      console.log(`Slots: ${JSON.stringify(slots)}`);
   
       return handlerInput.responseBuilder
         .speak(speechText)

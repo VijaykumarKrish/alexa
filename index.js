@@ -9,7 +9,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 
-
 // const LaunchRequestHandler = {
 //     canHandle(handlerInput) {
 //         return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
@@ -216,7 +215,7 @@ app.get('/get', (req,res) => {
 
 
 app.post('/alexa', async (req, res) => {
-        // console.log('Received request:', JSON.stringify(req.body, null, 2));
+        console.log('Received request:', JSON.stringify(req.body, null, 2));
         try {
             const response = await skill.invoke(req.body);
             res.json(response);

@@ -77,12 +77,12 @@ const LaunchRequestHandler = {
       return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
     handle(handlerInput) {
-      const speechText = 'Welcome to your SDK weather skill. Ask me the weather!';
+      const speechText = 'Welcome to smart home. Ask about the window!';
   
       return handlerInput.responseBuilder
         .speak(speechText)
         .reprompt(speechText)
-        .withSimpleCard('Welcome to your SDK weather skill. Ask me the weather!', speechText)
+        .withSimpleCard('Welcome to smart home. Ask about the window!', speechText)
         .getResponse();
     }
   };
@@ -101,6 +101,16 @@ const LaunchRequestHandler = {
       const slots = handlerInput.requestEnvelope.request.intent.slots;
       const userQuery = handlerInput.requestEnvelope.request.intent.slots.window.value;
       const question = handlerInput.requestEnvelope.request.intent.slots.query.value;
+
+      if(question.startsWith("move")){
+        speechText = "window is ready to move";
+      }else if(question.startsWith("open")){
+        speechText = "window is ready to open";
+      }else if(question.startsWith("close")){
+        speechText = "window is ready to close";
+      }else{
+        speechText = "please tell me the proper command";
+      }
      
   
       console.log(`Intent received: ${intentName}`);

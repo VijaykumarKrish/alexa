@@ -100,7 +100,7 @@ const LaunchRequestHandler = {
       const intentName = Alexa.getIntentName(handlerInput.requestEnvelope);
       const slots = handlerInput.requestEnvelope.request.intent.slots;
       const userQuery = handlerInput.requestEnvelope.request.intent.slots.window.value;
-      const question = handlerInput.requestEnvelope.request.intent.slots.query.value;
+      let question = handlerInput.requestEnvelope.request.intent.slots.query.value;
 
       if(question.startsWith("move")){
         speechText = "window is ready to move";

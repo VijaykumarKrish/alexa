@@ -113,7 +113,7 @@ const LaunchRequestHandler = {
         .speak(speechText)
         // .withShouldEndSession(false)
         // .reprompt("ok")
-        .withSimpleCard('window is started to working.', speechText)
+        .withSimpleCard(speechText)
         .getResponse();
     }
   };

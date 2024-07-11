@@ -111,7 +111,7 @@ const LaunchRequestHandler = {
 
       return handlerInput.responseBuilder
         .speak(speechText)
-        .withShouldEndSession(false)
+        // .withShouldEndSession(false)
         // .reprompt("ok")
         .withSimpleCard('window is started to working.', speechText)
         .getResponse();

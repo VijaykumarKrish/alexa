@@ -100,11 +100,13 @@ const LaunchRequestHandler = {
       const intentName = Alexa.getIntentName(handlerInput.requestEnvelope);
       const slots = handlerInput.requestEnvelope.request.intent.slots;
       const userQuery = handlerInput.requestEnvelope.request.intent.slots.window.value;
+      const question = handlerInput.requestEnvelope.request.intent.slots.query.value;
      
   
       console.log(`Intent received: ${intentName}`);
       console.log(`User query: ${userQuery}`);
       console.log(`Slots: ${JSON.stringify(slots)}`);
+      console.log(`question: ${JSON.stringify(question)}`);
   
 
       return handlerInput.responseBuilder

@@ -87,6 +87,37 @@ const LaunchRequestHandler = {
     }
   };
 
+
+  const AskWindowIntentHandler = {
+    canHandle(handlerInput) {
+      return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+        && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AskWindowIntents';
+    },
+    handle(handlerInput) {
+      console.log("handlerInput: ",handlerInput);
+      const speechText = 'window is started to working';
+
+      const intentName = Alexa.getIntentName(handlerInput.requestEnvelope);
+      const slots = handlerInput.requestEnvelope.request.intent.slots;
+      const userQuery = handlerInput.requestEnvelope.request.intent.slots.window.value;
+     
+  
+      console.log(`Intent received: ${intentName}`);
+      console.log(`User query: ${userQuery}`);
+      console.log(`Slots: ${JSON.stringify(slots)}`);
+  
+
+      return handlerInput.responseBuilder
+        .speak(speechText)
+        .reprompt("ok")
+        .withSimpleCard('window is started to working.', speechText)
+        .getResponse();
+    }
+  };
+
+
+
+
   const AskWeatherIntentHandler = {
     canHandle(handlerInput) {
       return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
@@ -99,6 +130,10 @@ const LaunchRequestHandler = {
       const intentName = Alexa.getIntentName(handlerInput.requestEnvelope);
       const slots = handlerInput.requestEnvelope.request.intent.slots;
       const userQuery = handlerInput.requestEnvelope.request.intent.slots.InfoType.value;
+      const fullQuestion = handlerInput.requestEnvelope.request.intent.slots.FullQuestion.value;
+
+
+      console.log(`Full question: ${fullQuestion}`);
      
   
       console.log(`Intent received: ${intentName}`);
@@ -194,7 +229,8 @@ const LaunchRequestHandler = {
 skill = Alexa.SkillBuilders.custom()
   .addRequestHandlers(
     LaunchRequestHandler,
-    AskWeatherIntentHandler,
+    AskWindowIntentHandler,
+    // AskWeatherIntentHandler,
     HelpIntentHandler,
     CancelAndStopIntentHandler,
     SessionEndedRequestHandler

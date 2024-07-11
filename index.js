@@ -99,12 +99,15 @@ const LaunchRequestHandler = {
       const intentName = Alexa.getIntentName(handlerInput.requestEnvelope);
       const slots = handlerInput.requestEnvelope.request.intent.slots;
       const userQuery = handlerInput.requestEnvelope.request.intent.slots.InfoType.value;
+      const completeQuestion = handlerInput.requestEnvelope.request.intent.slots[handlerInput.requestEnvelope.request.intent.name].value;
      
   
       console.log(`Intent received: ${intentName}`);
       console.log(`User query: ${userQuery}`);
       console.log(`Slots: ${JSON.stringify(slots)}`);
+      console.log(`completeQuestion: ${completeQuestion}`);
   
+
       return handlerInput.responseBuilder
         .speak(speechText)
         .withShouldEndSession(false)

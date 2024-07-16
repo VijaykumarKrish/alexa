@@ -3,11 +3,15 @@ const Alexa = require('ask-sdk-core');
 const express = require('express');
 const bodyParser = require('body-parser');
 const { ExpressAdapter } = require('ask-sdk-express-adapter');
+const mqtt = require('mqtt');
+const fs = require('fs');
+
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+let topic = "e831cd2181f4/command";
 
 // const LaunchRequestHandler = {
 //     canHandle(handlerInput) {
@@ -66,10 +70,13 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 
 
+// const decimal = 500;
+// const littleEndianBuffer = decimalToLittleEndian(decimal);
 
 
 
 
+client = connect();
 
 
 const LaunchRequestHandler = {
@@ -88,6 +95,8 @@ const LaunchRequestHandler = {
   };
 
 
+  
+
   const AskWindowIntentHandler = {
     canHandle(handlerInput) {
       return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
@@ -103,10 +112,35 @@ const LaunchRequestHandler = {
       const question = handlerInput.requestEnvelope.request.intent.slots.query.value;
 
       if(question.startsWith("move")){
+
+        //let payload = [0x0d ,0x0f, 0x00, 0x30, 0x05, 0x96, 0x73, 0x00, 0x20, 0x01, 0x64, 0x07, 0x64]
+        const extractedNumbers = extractNumbersFromSentence(question);
+       if(extractedNumbers.length === 0){
+        speechText = "please provide any prcentage"
+       }else{
+        let percentageVlaue = (parseInt(extractedNumbers[0])*1000)/100;
+        const littleEndianBuffer = decimalToLittleEndian(percentageVlaue);
+        console.log(littleEndianBuffer);
+        let payload = `000f cf00 0073 9605 2001 ${littleEndianBuffer} 0732`;
+
+        client.publish('e831cd2181f4/command', Buffer.from(payload, 'hex'));
+        console.log("payload "+payload);
         speechText = "window is ready to move";
+       }
+      
       }else if(question.startsWith("open")){
+
+        let arr = `000f cf00 0073 9605 2001 e803 0732`;
+
+        
+
+       client.publish('e831cd2181f4/command', Buffer.from(arr, 'hex'));
+
         speechText = "window is ready to open";
       }else if(question.startsWith("close")){
+        let payload ='000f cf00 0073 9605 2001 0000 0732';
+        client.publish('e831cd2181f4/command', Buffer.from(arr, 'hex'));
+
         speechText = "window is ready to close";
       }else{
         speechText = "please tell me the proper command";
@@ -291,3 +325,62 @@ app.post('/', adapter.getRequestHandlers());
 
 const port = process.env.PORT || 3001;
 app.listen(port, () => console.log(`Server running on port ${port}`));
+
+function connect() {
+  // Connect mqtt with credentials (in case of needed, otherwise we can omit 2nd param)
+  let encodedString = fs.readFileSync('./ca.pem');
+
+  // let decodedString = Buffer.from(encodedString, 'base64').toString("binary");
+
+  
+  // let decodedString = atob(encodedString);
+
+  // this.mqttClient = mqtt.connect("mqtts://ec2-3-226-44-11.compute-1.amazonaws.com:8883", { username: "celllabs", password: "celllabs",  ca: encodedString },
+  // );
+  this.mqttClient = mqtt.connect("mqtt://krishna@localhost:1883"
+  );
+  
+
+  // Mqtt error calback
+  this.mqttClient.on('error', (err) => {
+    console.log(err);
+    this.mqttClient.end();
+  });
+
+  // Connection callback
+  this.mqttClient.on('connect', () => {
+    console.log(`mqtt client connected`);
+  });
+
+  // mqtt subscriptions
+  this.mqttClient.subscribe('e831cd2181f4/command', {qos: 0});
+
+  // When a message arrives, console.log it
+  this.mqttClient.on('message', function (topic, message) {
+    console.log(message.toString());
+  });
+
+  this.mqttClient.on('close', () => {
+    console.log(`mqtt client disconnected`);
+  });
+  
+  return this.mqttClient;
+}
+
+function decimalToLittleEndian(decimalNumber) {
+  const buffer = Buffer.alloc(4);
+  buffer.writeInt32LE(decimalNumber);
+  return buffer.toString('hex', 0, 2);
+}
+function extractNumbersFromSentence(sentence) {
+  const numbers = sentence.match(/\d+/g);
+  return numbers ? numbers : [];
+}
+
+ // Output: <Buffer 96 75 16 0>
+
+
+
+
+
+

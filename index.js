@@ -76,7 +76,7 @@ let topic = "e831cd2181f4/command";
 
 
 
-client = connect();
+// client = connect();
 
 
 const LaunchRequestHandler = {
@@ -123,8 +123,8 @@ const LaunchRequestHandler = {
         console.log(littleEndianBuffer);
         let payload = `000f cf00 0073 9605 2001 ${littleEndianBuffer} 0732`;
 
-        client.publish('e831cd2181f4/command', Buffer.from(payload, 'hex'));
-        console.log("payload "+payload);
+        // client.publish('e831cd2181f4/command', Buffer.from(payload, 'hex'));
+        console.log("payload "+Buffer.from(payload, 'hex'));
         speechText = "window is ready to move";
        }
       
@@ -134,12 +134,12 @@ const LaunchRequestHandler = {
 
         
 
-       client.publish('e831cd2181f4/command', Buffer.from(arr, 'hex'));
+      //  client.publish('e831cd2181f4/command', Buffer.from(arr, 'hex'));
 
         speechText = "window is ready to open";
       }else if(question.startsWith("close")){
         let payload ='000f cf00 0073 9605 2001 0000 0732';
-        client.publish('e831cd2181f4/command', Buffer.from(arr, 'hex'));
+        // client.publish('e831cd2181f4/command', Buffer.from(arr, 'hex'));
 
         speechText = "window is ready to close";
       }else{
@@ -335,10 +335,9 @@ function connect() {
   
   // let decodedString = atob(encodedString);
 
-  // this.mqttClient = mqtt.connect("mqtts://ec2-3-226-44-11.compute-1.amazonaws.com:8883", { username: "celllabs", password: "celllabs",  ca: encodedString },
-  // );
-  this.mqttClient = mqtt.connect("mqtt://krishna@localhost:1883"
+  this.mqttClient = mqtt.connect("mqtts://ec2-3-226-44-11.compute-1.amazonaws.com:8883", { username: "celllabs", password: "celllabs",  ca: encodedString },
   );
+  // this.mqttClient = mqtt.connect("mqtt://krishna@localhost:1883");
   
 
   // Mqtt error calback

@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const { ExpressAdapter } = require('ask-sdk-express-adapter');
 const mqtt = require('mqtt');
 const fs = require('fs');
+const serverless = require('serverless-http');
+const { throws } = require('assert');
 
 
 const app = express();
@@ -81,7 +83,9 @@ let topic = "e831cd2181f4/command";
 
 const LaunchRequestHandler = {
   canHandle(handlerInput) {
-    return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
+    return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest'
+    // return handlerInput.requestEnvelope.type === 'IntentRequest'
+    // && handlerInput.requestEnvelope.intent.name === 'AskWindowIntents';
   },
   handle(handlerInput) {
     const speechText = 'Welcome to smart home. Ask about the window!';
@@ -108,7 +112,7 @@ const AskWindowIntentHandler = {
 
     const intentName = Alexa.getIntentName(handlerInput.requestEnvelope);
     const slots = handlerInput.requestEnvelope.request.intent.slots;
-    const userQuery = handlerInput.requestEnvelope.request.intent.slots.window.value;
+    // const userQuery = handlerInput.requestEnvelope.request.intent.slots.window.value;
     const question = handlerInput.requestEnvelope.request.intent.slots.query.value;
 
     if (question.startsWith("move")) {
@@ -329,6 +333,58 @@ app.post('/alexa', async (req, res) => {
 
 app.post('/', adapter.getRequestHandlers());
 
+app.get('/page', async (req,res) => {
+  res.sendFile(__dirname +'/public/index.html');
+});
+
+
+
+app.get('/authorize',  (req, res) => {
+  try{
+  const scope = req.query.scope;
+  const code = req.query.code;
+  const state = req.query.state;
+ 
+  console.log("scope ",scope);
+  console.log("code ",code);
+  console.log("state ",state);
+ 
+ 
+  }catch(e){
+    console.log("Exception: ",e);
+  }
+
+  // const clientId = req.query.client_id;
+  // const redirectUri = req.query.redirect_uri;
+  
+ 
+
+  // console.log("clientId ",clientId);
+  // console.log("redirectUri ",redirectUri);
+ 
+  
+
+  // Authenticate the user and get user consent
+
+  // On successful login and consent
+  // const authorizationCode = generateRandomCode();
+  const authorizationCode = 'generated-auth-code';
+  res.redirect(`${redirectUri}?code=${authorizationCode}&state=${state}`);
+});
+
+app.post('/token', (req, res) => {
+  const authorizationCode = req.body.code;
+
+  // Validate the authorization code
+
+  const accessToken = 'generated-access-token';
+  res.json({
+    access_token: accessToken,
+    token_type: 'Bearer',
+    expires_in: 3600
+  });
+});
+
 const port = process.env.PORT || 3001;
 app.listen(port, () => console.log(`Server running on port ${port}`));
 
@@ -385,6 +441,8 @@ function insertSpacesInHex(hexString) {
   const result = hexString.match(/.{1,2}/g).join(' ');
   return result;
 }
+
+// module.exports.handler = serverless(app);
 
 // Output: <Buffer 96 75 16 0>
 

@@ -21,7 +21,7 @@
 
      <script type="text/javascript">
         window.onAmazonLoginReady = function() {
-          amazon.Login.setClientId(PROCESS.ENV.CLIENT_ID);
+          amazon.Login.setClientId(process.env..CLIENT_ID);
         };
         (function(d) {
           var a = d.createElement('script'); a.type = 'text/javascript';
@@ -37,7 +37,7 @@
             'profile' : {'essential': false}
         };
         amazon.Login.authorize(options,
-            'https://alexa-k4i4.onrender.com/authorize');
+        process.env.AUTHORIZE_URL);
         return false;
     };
     

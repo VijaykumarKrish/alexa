@@ -7,7 +7,7 @@ const mqtt = require('mqtt');
 const fs = require('fs');
 const serverless = require('serverless-http');
 
-require('dotenv').config()
+require('dotenv').config();
 
 
 const app = express();

@@ -6,7 +6,8 @@ const { ExpressAdapter } = require('ask-sdk-express-adapter');
 const mqtt = require('mqtt');
 const fs = require('fs');
 const serverless = require('serverless-http');
-const { throws } = require('assert');
+
+require('dotenv').config()
 
 
 const app = express();

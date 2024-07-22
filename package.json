@@ -12,6 +12,7 @@
     "ask-sdk": "^2.7.0",
     "ask-sdk-express-adapter": "^2.14.0",
     "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "mqtt": "^5.8.0",
     "serverless-http": "^3.2.0"

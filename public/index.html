@@ -33,9 +33,9 @@
         document.getElementById('LoginWithAmazon').onclick = function() {
         options = {}
         options.scope = 'profile';
-        options.scope_data = {
-            'profile' : {'essential': false}
-        };
+        // options.scope_data = {
+        //     'profile' : {'essential': false}
+        // };
         amazon.Login.authorize(options,
         "https://alexa-k4i4.onrender.com/authorize");
         return false;
